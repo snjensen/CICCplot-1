@@ -6,7 +6,8 @@ gamma_r_rec_pcm <- function(pars, r, par.grp){
 }
 
 # PCM version af CICCplot funktionen
-CICCplot <- function(model, which.item = 1, lower.groups = NULL, all.items = F, grid.items = T, error.bar = F,  color = NULL){
+
+CICCplot <- function(model, which.item = 1, lower.groups = NULL, all.items = F, grid.items = T, error.bar = F,  color = NULL, plot.title = "itemnumber", x.axis.seq = NULL){
   
   data <- model$X
   betas <- model$betapar
@@ -80,17 +81,24 @@ CICCplot <- function(model, which.item = 1, lower.groups = NULL, all.items = F, 
     
     if (error.bar){ data_obs$CI.bound <- 1.96*sqrt(data_obs[,3]/data_obs[,4]) } 
     
+    if (plot.title[1] == "itemname") { plottitle <- paste0(colnames(model$X)[which.item]) } else if (plot.title[1] == "itemnumber"){
+      plottitle <- paste0("Item ", which.item) } else {plottitle <- plot.title[1]}
+    
+    
     col <- c("Expected" = "black", "Observed" = "red")
     if (!is.null(color)) col <- c("Expected" = color$expected[1], "Observed" = color$observed[1])
+    
+    xaxis.breaks <- Tot.val
+    if (!is.null(x.axis.seq)) xaxis.breaks <- x.axis.seq
     
     p <- ggplot(data = data_exp, aes(x = Tot.val, y= exp.val, color = "Expected")) + 
       geom_line(linetype = "dashed") + geom_point() +
       geom_point(data = data_obs, aes(x = Tot.val_grp, y = obs.val_grp, color = "Observed"), size = 2) +
       theme(legend.title = element_blank(), plot.title = element_text(size = 15,hjust = 0.5)) + scale_colour_manual(values = col) +
-      ggtitle(paste0("Item ", which.item)) + xlab("Total Score") + ylab("Conditional Item-Score")  + 
-      scale_x_continuous(breaks=Tot.val) + geom_errorbar(data = data_obs, 
-                                                         aes(x = Tot.val_grp, y = obs.val_grp, ymin = obs.val_grp - CI.bound, ymax = obs.val_grp + CI.bound, color = "Observed"), 
-                                                         width = 0.2, size = 1)
+      ggtitle(plottitle) + xlab("Total Score") + ylab("Conditional Item-Score")  + 
+      scale_x_continuous(breaks= xaxis.breaks) + geom_errorbar(data = data_obs, 
+                                                               aes(x = Tot.val_grp, y = obs.val_grp, ymin = obs.val_grp - CI.bound, ymax = obs.val_grp + CI.bound, color = "Observed"), 
+                                                               width = 0.2, size = 1)
     
     P <- p
   }
@@ -171,16 +179,21 @@ CICCplot <- function(model, which.item = 1, lower.groups = NULL, all.items = F, 
       data_obs <- data.frame(Tot.val_grp, obs.val_grp, var.val_grp, n.val_grp, CI.bound = NA)
       
       if (error.bar){ data_obs$CI.bound <- 1.96*sqrt(data_obs[,3]/data_obs[,4]) } 
+      if (plot.title[1] == "itemname") { plottitle <- paste0(colnames(model$X)[which.item]) } else if (plot.title[1] == "itemnumber"){
+        plottitle <- paste0("Item ", which.item) } else {plottitle <- plot.title[j]}
       
       col <- c("Expected" = "black", "Observed" = "red")
       if (!is.null(color)) col <- c("Expected" = color$expected[1], "Observed" = color$observed[1])
+      
+      xaxis.breaks <- Tot.val
+      if (!is.null(x.axis.seq)) xaxis.breaks <- x.axis.seq
       
       p <- ggplot(data = data_exp, aes(x = Tot.val, y= exp.val, color = "Expected")) + 
         geom_line(linetype = "dashed") + geom_point() +
         geom_point(data = data_obs, aes(x = Tot.val_grp, y = obs.val_grp, color = "Observed"), size = 2) +
         theme(legend.title = element_blank(), plot.title = element_text(size = 15,hjust = 0.5)) + scale_colour_manual(values = col) +
-        ggtitle(paste0("Item ", which.item)) + xlab("Total Score") + ylab("Conditional Item-Score")  + 
-        scale_x_continuous(breaks=Tot.val) + 
+        ggtitle(plottitle) + xlab("Total Score") + ylab("Conditional Item-Score")  + 
+        scale_x_continuous(breaks=xaxis.breaks) + 
         geom_errorbar(data = data_obs, 
                       aes(x = Tot.val_grp, y = obs.val_grp, ymin = obs.val_grp - CI.bound, ymax = obs.val_grp + CI.bound, color = "Observed"), 
                       width = 0.2, size = 1)
