@@ -1,6 +1,6 @@
 # CICCplot
 
-CICCplot is an R function that can be used to plot Conditional Item Characteristic Curves. These are useful when fitting a Rasch model to datainnorder to graphically detect misfit of an item in the model. A CICC describies the expected outcome of an item when conditioning on the total score of all items in the model. When plotting CICC's the total score will be on the x-axis and the conditional expected item score will be on the y-axis. For dichotomous items the expected item score corresponds to the probability of getting item score '1' and is always zero when the total score is zero and one when the total score is the maximal possible score. Between these to points the curve will be monotone increasing. 
+CICCplot is an R function that can be used to plot Conditional Item Characteristic Curves. These are useful when fitting a Rasch model to data in order to graphically detect misfit of an item in the model. A CICC describes the expected outcome of an item when conditioning on the total score of all items in the model. When plotting CICC's the total score will be on the x-axis and the conditional expected item score will be on the y-axis. For dichotomous items the expected item score corresponds to the probability of getting item score '1' and is always zero when the total score is zero and one when the total score is the maximal possible score. Between these to points the curve will be monotone increasing. 
 
 ## Before using CICCplot
 
@@ -13,7 +13,7 @@ library(ggplot2)
 library(ggpubr)
 ```
 
-to use the function `CICCplot` directly from a R-script containig the function. Therefore it is necessary to source the function into our current work, when it should be applied.
+o use the function `CICCplot` directly from a R-script containig the function. Therefore it is necessary to source the function into our current work, when it should be applied.
 
 ```
 source("CICCplot_source.R")
